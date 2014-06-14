@@ -8,6 +8,6 @@ module.exports = (app) ->
 	app.get '/users/user/:token',user.findByToken
 	app.post '/users/enroll',user.addUser
 	app.put '/users/setting', user.setting
-	app.put '/users/play',user.play
+	# app.put '/users/play',user.play
 
 

@@ -18,7 +18,8 @@ exports.addUser = (req,res) ->
         if(err) then throw new Error(err)
         res.json(user)
 
-exports.settings = (req,res) ->
+exports.setting = (req,res) ->
+    console.log "a"
     User.update {token:req.body.token},{$set: {
         target_sex:req.body.target_sex
         target_age_s:req.body.target_age_s
@@ -26,4 +27,4 @@ exports.settings = (req,res) ->
         }},(err)->
             console.log "a"
             if(err) then throw new Error(err)
-            res.sent "Success"
+            res.json(req.body)
