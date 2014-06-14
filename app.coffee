@@ -2,6 +2,7 @@ express  = require 'express'
 mongoose = require 'mongoose'
 fs       = require 'fs'
 config   = require './config/config'
+bodyParser = require 'body-parser'
 
 mongoose.connect config.db
 db = mongoose.connection
@@ -14,6 +15,7 @@ fs.readdirSync(modelsPath).forEach (file) ->
     require modelsPath + '/' + file
 
 app = express()
+app.use bodyParser.json()
 
 require('./config/express')(app, config)
 require('./config/routes')(app)
