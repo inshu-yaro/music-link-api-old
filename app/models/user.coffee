@@ -12,11 +12,14 @@ UserSchema = new Schema(
   target_age_e:Number
   register_date:Date
   lastlogin_date:Date
-  # play_history:[{
-  #   type: Schema.Types.ObjectId
-  #   ref: 'Music'
-  # }]
-
+  play_history:[{
+    music:{
+      type: Schema.Types.ObjectId
+      ref: 'Music'
+    }
+    count:Number
+    last_play:Date
+  }]
 )
 
 

@@ -4,7 +4,7 @@ Schema = mongoose.Schema
 MusicSchema = new Schema(
   name: String
   artist: String
-  genre:String
+  # genre:String
 )
 
 
