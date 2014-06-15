@@ -2,6 +2,9 @@ mongoose = require 'mongoose'
 User  = mongoose.model 'User'
 Music     = mongoose.model 'Music'
 PlayHistory = mongoose.model 'PlayHistory'
+Chat = mongoose.model 'Chat'
+crypto = require 'crypto'
+merge = require 'merge'
 
 withMusic = (musicName,artist,handler) ->
     Music.findOne {name:musicName}, (err,results)->
@@ -25,18 +28,19 @@ withUser = (tokenId, handler) ->
         if(err) then throw new Error(err)
         handler(result)
 
-upadateDate = (token,date)->
+updateDate = (token,date)->
     User.update {token:token},{$set:{
         lastlogin_date:date
-        }},(err)->
-            if(err) then throw new Error(err)
+    }}, (err)->
+        if(err) then throw new Error(err)
+
 
 exports.play = (req,res) ->
     token = req.body.token
     withUser token, (user) ->
         withMusic req.body.music, req.body.artist,(musicId) ->
             date = Date.now()
-            upadateDate(token,date)
+            updateDate(token,date)
             console.log user
             console.log musicId
             PlayHistory.findOne {music:musicId,user:user._id},(err,result)->
@@ -56,4 +60,3 @@ exports.play = (req,res) ->
                         })
                     play.save (err)->
                         if(err) then throw new Error(err)
-                res.json(req.body)
