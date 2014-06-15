@@ -10,10 +10,11 @@ ChatSchema = new Schema(
       type: Schema.Types.ObjectId
       ref: 'User'
   }
+  last_msg:Date
   messages:[{
-  	text:String
-  	timestamp:Date
-  	}]
+      type: Schema.Types.ObjectId
+      ref: 'User'
+  }]
   )
 
 
