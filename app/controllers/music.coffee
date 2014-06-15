@@ -1,6 +1,7 @@
 mongoose = require 'mongoose'
 User  = mongoose.model 'User'
 Music     = mongoose.model 'Music'
+PlayHistory = mongoose.model 'PlayHistory'
 
 withMusic = (musicName,artist,handler) ->
     Music.findOne {name:musicName}, (err,results)->
@@ -34,26 +35,25 @@ exports.play = (req,res) ->
     token = req.body.token
     withUser token, (user) ->
         withMusic req.body.music, req.body.artist,(musicId) ->
-            date = req.body.date
+            date = Date.now()
             upadateDate(token,date)
             console.log user
             console.log musicId
-            user.play_history.find {music:musicId},(err,results)->
-                console.log  "b"
+            PlayHistory.findOne {music:musicId,user:user._id},(err,result)->
                 if(err) then throw new Error(err)
-                if(results)
-                    cnt = results.count + 1
-                    user.play_history.update {music:musicId},{$set:{
-                        count:cnt
-                        last_play:date
-                        }},(err)->
-                            if(err) then throw new Error(err)
-                else
-                    user.play_history.push({
-                        music:musicId
-                        count:1
-                        last_play:date
-                        })
-                    user.save (err)->
+                if (result)
+                    cnt = result.count + 1
+                    result.count = cnt
+                    result.last_play = date
+                    result.save (err)->
                         if(err) then throw new Error(err)
-    
+                else
+                    play = new PlayHistory({
+                        music:musicId
+                        user:user._id
+                        last_play:date
+                        count:1
+                        })
+                    play.save (err)->
+                        if(err) then throw new Error(err)
+                res.json(req.body)
