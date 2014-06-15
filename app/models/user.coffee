@@ -2,30 +2,40 @@ mongoose = require 'mongoose'
 Schema = mongoose.Schema
 
 UserSchema = new Schema(
-  token:String
-  name: String
-  age: Number
-  sex:String
-  id:String
-  target_sex:String
-  target_age_s:Number
-  target_age_e:Number
-  register_date:Date
-  lastlogin_date:Date
-  mail:String
+  token: String
+  firstName: String
+  lastName: String
+  birthday: Date
+  gender: String
+  id: String
+  targetGender: String
+  minTargetAge: Number
+  maxTargetAge: Number
+  registerDate: Date
+  lastLoginDate: Date
+  email: String
 )
+
+UserSchema.methods.getAge = ->
+  ageDifMs = Date.now() - @birthday.getTime()
+  ageDate = new Date(ageDifMs)
+  Math.abs(ageDate.getUTCFullYear() - 1970)
+
+UserSchema.methods.fullName = ->
+  @lastName + " " + @firstName
 
 UserSchema.pre 'save',(next)->
   if !@register_date
-    console.log  "aaa"
-    @register_date = new Date()
-    @lastlogin_date = new Date()
-    @target_age_e = @age + 5
-    @target_age_s = @age - 5
-  if @sex == "male"
-    @target_sex = "female"
+    @birthday = if @birthday? then Date.parse(@birthday) else null
+    age = @getAge()
+    @registerDate = new Date()
+    @lastLoginDate = new Date()
+    @minTargetAge = age + 5
+    @maxTargetAge = age - 5
+  if @gender == "male"
+    @targetGender = "female"
   else
-    @target_sex = "male"
+    @targetGender = "male"
   next()
 
 
