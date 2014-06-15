@@ -2,12 +2,16 @@ mongoose = require 'mongoose'
 Schema = mongoose.Schema
 
 MessageSchema = new Schema(
-  	user:{
+    user1:{
       type: Schema.Types.ObjectId
-      ref: 'User'  		
-  	}
-  	text:String
-  	timestamp:Date
+      ref: 'User'     
+    }
+    user2:{
+      type: Schema.Types.ObjectId
+      ref: 'User'     
+    }
+    text:String
+    timestamp:Date
   )
 
 
