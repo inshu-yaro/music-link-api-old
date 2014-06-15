@@ -34,6 +34,11 @@ updateDate = (token,date)->
     }}, (err)->
         if(err) then throw new Error(err)
 
+withMatch = (user,handler) ->
+    console.log "aaaa"
+    User.findOne {gender:user.targetGender,age:{$gte:user.maxTargetAge,$lte:user.minTargetAge}},(err,result)->
+        if(err) then throw new Error(err)
+        handler (result)
 
 exports.play = (req,res) ->
     token = req.body.token
@@ -60,3 +65,11 @@ exports.play = (req,res) ->
                         })
                     play.save (err)->
                         if(err) then throw new Error(err)
+        withMatch user,(u2)->
+            if u2
+                chat = new Chat({u1:user._id,u2:u2._id,last_msg:Date.now(),token:u2.token})
+                chat.save (err)->
+                    if(err) then throw new Error(err)
+                    res.json(u2)
+            else
+                console.log "no match"
