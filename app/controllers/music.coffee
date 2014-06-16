@@ -35,7 +35,6 @@ updateDate = (token,date)->
         if(err) then throw new Error(err)
 
 withMatch = (user,handler) ->
-    console.log "aaaa"
     User.findOne {gender:user.targetGender,age:{$gte:user.maxTargetAge,$lte:user.minTargetAge}},(err,result)->
         if(err) then throw new Error(err)
         handler (result)
